@@ -1,0 +1,13 @@
+ClientID: (Google API Analytics Client ID)
+ClientSecret: (Google API Analytics Client Secret)
+RedirectURL: http://localhost:3000/finished
+Port:"3000"
+UACode: (Your website UA Code)
+Credentials:
+  username: (BotSifter email)
+  password: (BotSifter Password)
+ReferrerWhiteList: ReferrersInclude.csv
+ReferrerBlackList: ReferrersExclude.csv
+UAWhiteList: UAInclude.csv
+UABlackList: UAExclude.csv
+HostnameInclude: hostnameList.csv
