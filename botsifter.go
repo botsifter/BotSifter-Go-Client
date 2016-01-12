@@ -885,7 +885,7 @@ func main() {
 		}
 		bar.Finish()
 
-		if hosts != nil {
+		if len(hosts) != 0 {
 			var hostList []string
 			hostList = HostMerge(hosts, false)
 
