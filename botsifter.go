@@ -65,12 +65,24 @@ type Referrer struct {
 func (r Referrer) length() int {
 	return len(r.Referrer)
 }
+
 func (r Referrer) String() string {
 	if len(r.Referrer) > 100 {
 		r.Referrer = r.Referrer[0:100] + "..."
 	}
 	return fmt.Sprintf("\t%s\t%s\t%s", r.Rank, r.Referrer, r.Score)
 }
+
+// func (r Referrer) String() string {
+// 	if len(r.Referrer) > 100 {
+// 		r.Referrer = r.Referrer[0:100] + "..."
+// 	}
+// 	score, err := strconv.Atoi(r.Score)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	return fmt.Sprintf("\t%s\t%s\t%.2f", r.Rank, r.Referrer, score)
+// }
 
 type Referrers []Referrer
 
@@ -121,7 +133,7 @@ func (leftSide Referrers) findInBoth(rightSide Referrers) Referrers {
 }
 
 type UserAgent struct {
-	Referrer string
+	Referrer string `json:"UserAgent"`
 	Rank     string
 	Score    string
 }
