@@ -21,7 +21,7 @@ a stand alone executable that will work on your system.
 ### Optional Steps:
 
 Building a OS specific executable with the following commands: "GOOS=linux go build botsifter.go" for linux builds, "GOOS=darwin go
-build botsifter.go" for mac and "GOOS=windows go build botsifer.go" for windows. if you are getting error messages when trying to
+build botsifter.go" for mac and "GOOS=windows go build botsifter.go" for windows. if you are getting error messages when trying to
 build cross OS versions, this thread will help:
 [http://stackoverflow.com/questions/27412601/cross-compiling-go](http://stackoverflow.com/questions/27412601/cross-compiling-go)
 
