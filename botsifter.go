@@ -398,27 +398,25 @@ func HostMerge(List []Host, ShowBar bool) []string {
 }
 
 var (
-	configFile       = kingpin.Flag("config", "Specify custom config file").Default("config.txt").PlaceHolder("filename.txt").String()
-	confirmFlag      = kingpin.Flag("confirm", "Output confirmation of changes to screen without applying any changes (Bool)").Default("false").Bool()
-	cleanFlag        = kingpin.Flag("clean", "Removes all BotSifter Filters from GA (Bool)").Default("false").Bool()
-	downloadListFlag = kingpin.Flag("download", "Toggle downloading of BotSifter Filters from BotSifter (Bool)").Default("true").Bool()
+	configFile   = kingpin.Flag("config", "Specify custom config file").Default("config.txt").PlaceHolder("filename.txt").String()
+	confirmFlag  = kingpin.Flag("confirm", "Output confirmation of changes to screen without applying any changes (Bool)").Bool()
+	cleanFlag    = kingpin.Flag("clean", "Removes all BotSifter Filters from GA (Bool)").Bool()
+	downloadFlag = kingpin.Flag("download", "Toggle downloading of BotSifter Filters from BotSifter (Bool)").Bool()
 )
 
 func main() {
 	kingpin.CommandLine.HelpFlag.Short('h')
-
 	kingpin.Parse()
 
-	configFile := *configFile
-	confirmFlag := *confirmFlag
-	cleanFlag := *cleanFlag
-	downloadListFlag := *downloadListFlag
-
-	fmt.Println(configFile)
+	if *downloadFlag == true {
+		*downloadFlag = false
+	} else {
+		*downloadFlag = true
+	}
 
 	w := new(tabwriter.Writer)
 	var output io.Writer
-	if confirmFlag == false {
+	if *confirmFlag == false {
 		var err error
 		// log.SetFlags(0)
 		LogFileLocation := flag.String("log", "BotSifter.log", "Specifies path of the log file")
@@ -439,10 +437,10 @@ func main() {
 
 	//Read config file
 	var GooFig GoogleConfig
-	data, err := ioutil.ReadFile(configFile)
+	data, err := ioutil.ReadFile(*configFile)
 
 	if err != nil {
-		fmt.Println("Unable to open configuration file: " + configFile)
+		fmt.Println("Unable to open configuration file: " + *configFile)
 		return
 	}
 	//Load config data from file into struct
@@ -451,7 +449,7 @@ func main() {
 		log.Println(err)
 		return
 	}
-	fmt.Println("\nConfig File: \t\t[" + configFile + "]")
+	fmt.Println("\nConfig File: \t\t[" + *configFile + "]")
 	fmt.Println("Include Refferers File: [" + GooFig.RefWhite + "]")
 	fmt.Println("Exclude Refferers File: [" + GooFig.RefBlack + "]")
 	fmt.Println("Include UA File: \t[" + GooFig.UAWhite + "]")
@@ -506,8 +504,8 @@ func main() {
 
 	fmt.Println("\t\tCompleted")
 
-	if cleanFlag == false {
-		if downloadListFlag == true {
+	if *cleanFlag == false {
+		if *downloadFlag == true {
 			fmt.Print("Downloading BotSifter Referrer List...")
 			resp = retreiveList(GooFig.Person)
 			respDisplay = resp
@@ -762,7 +760,7 @@ func main() {
 	// log.Println(strings.Trim(fmt.Sprint(inBothListsRefs), "[]"))
 	log.Println("")
 
-	if confirmFlag == false {
+	if *confirmFlag == false {
 
 		length := len(filters.Items)
 		var bar *pb.ProgressBar
@@ -784,7 +782,7 @@ func main() {
 		}
 
 		//If cleanFlag entered then end program here
-		if cleanFlag == true {
+		if *cleanFlag == true {
 			return
 		}
 
@@ -839,7 +837,7 @@ func main() {
 			filter, err = service.Management.Filters.Insert(AccountID, filter).Do()
 			if err != nil {
 				fmt.Print("\n")
-				log.Println(err)
+				fmt.Println(err)
 				return
 			}
 			//Save filter Ids for later
@@ -939,7 +937,7 @@ func main() {
 		}
 		bar.Finish()
 	}
-	fmt.Println("Saving configuration data to " + configFile)
+	fmt.Println("Saving configuration data to " + *configFile)
 	//Marshal data to save into config file
 	data, err = yaml.Marshal(&GooFig)
 	if err != nil {
@@ -948,7 +946,7 @@ func main() {
 	}
 
 	//Write config file
-	err = ioutil.WriteFile(configFile, data, 0644)
+	err = ioutil.WriteFile(*configFile, data, 0644)
 
 	if err != nil {
 		log.Println(err)
